@@ -1,10 +1,10 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 
 import {PrimaryScreenView} from '../../shared/index';
 
 import {BottomSheetContext} from '../../contexts';
-
+import DynamicBottomSheet from '../../components/DynamicBottomsheet';
 const styles = StyleSheet.create({
 	contentContainer: {
 		flex: 1,
@@ -14,24 +14,11 @@ const styles = StyleSheet.create({
 	},
 });
 
-export const BottomSheet = ({navigation}) => {
-	return (
-		<PrimaryScreenView style={{backgroundColor: 'steelblue'}}>
-			<View style={[styles.contentContainer]}>
-				<Text>BottomSheet</Text>
-				<Button onPress={() => navigation.goBack()} title="Dismiss" />
-				<Button
-					title="Track Button"
-					onPress={() => console.log("Track")}
-				/>
-			</View>
-		</PrimaryScreenView>
-	);
-}
-
-
 export const HomeScreen = ({navigation}) => {
 	const {bottomSheetContext, setBottomSheetContext} = useContext(BottomSheetContext);
+
+
+	const newBSRef = useRef(null)
 	//const onPressShowBs = () => bottomSheetContext.ref.current.snapToIndex(1);
 
 	const onPressShowBs = () => {
@@ -46,6 +33,7 @@ export const HomeScreen = ({navigation}) => {
 					<View
 						style={{flex: 1, alignItems: 'center', backgroundColor: 'teal'}}>
 						<Text>HomeScreen:{bottomSheetContext.title}</Text>
+						
 					</View>
 				);
 			},
@@ -63,6 +51,17 @@ export const HomeScreen = ({navigation}) => {
 		return unsubscribe;
 	}, [navigation]);
 
+	function renderDynamicBottomSheet() {
+		return(
+			<DynamicBottomSheet ref={newBSRef}>
+				<View>
+					<Button nativeID="testButton" title='native id here' onPress={()=>console.log('native id here')}/>
+				</View>
+			</DynamicBottomSheet>
+		)
+		
+	}
+
 	return (
 		<PrimaryScreenView style={{backgroundColor: 'steelblue'}}>
 			<View style={[styles.contentContainer]}>
@@ -71,10 +70,26 @@ export const HomeScreen = ({navigation}) => {
 					title="Go TestScreen"
 					onPress={() => navigation.navigate('TestScreen')}
 				/>
-				<Button title="Show Home BottomSheet" onPress={onPressShowBs} />
+				<Button title="Show New BottomSheet" onPress={()=>newBSRef.current.snapToIndex(0)} />
 			</View>
+			{renderDynamicBottomSheet()}
 		</PrimaryScreenView>
 	);
 };
+
+// export const BottomSheet = ({navigation}) => {
+// 	return (
+// 		<PrimaryScreenView style={{backgroundColor: 'steelblue'}}>
+// 			<View style={[styles.contentContainer]}>
+// 				<Text>BottomSheet</Text>
+// 				<Button onPress={() => navigation.goBack()} title="Dismiss" />
+// 				<Button
+// 					title="Track Button"
+// 					onPress={() => console.log("Track")}
+// 				/>
+// 			</View>
+// 		</PrimaryScreenView>
+// 	);
+// }
 
 

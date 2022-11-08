@@ -99,4 +99,6 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default withPendoRN(App);
+export default withPendoRN(App,{nativeIDs:[
+"testButton",
+]});
